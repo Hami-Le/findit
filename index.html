@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FindIt - Ứng Dụng Bảo Mật và Tìm Đồ</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header class="app-header-main">
+        <div class="container header-container">
+            <div class="logo">FindIt</div>
+            <nav class="app-nav">
+                <ul>
+                    <li><a href="#" class="nav-link active" data-view="view-homepage">Trang Chủ</a></li>
+                    <li><a href="#" class="nav-link" data-view="view-security">Bảo Mật</a></li>
+                    <li><a href="#" class="nav-link" data-view="view-finditems">Tìm Đồ</a></li>
+                    <li><a href="#" class="nav-link" data-view="view-community">Cộng Đồng</a></li>
+                </ul>
+            </nav>
+            <div class="user-profile-area">
+                <img src="login4.png" alt="User Avatar" id="user-avatar-icon" class="user-avatar">
+                </div>
+        </div>
+    </header>
+
+    <main id="app-main-content" class="container">
+        <div id="view-homepage" class="app-view current-view">
+            <h2>Chào mừng bạn đến với FindIt!</h2>
+            <p class="section-subtitle">Giải pháp toàn diện cho an toàn thiết bị và tìm kiếm đồ thất lạc.</p>
+            <div class="homepage-grid">
+                <div class="homepage-card" onclick="navigateToView('view-security', document.querySelector('[data-view=view-security]'))">
+                    <i class="fas fa-shield-alt fa-3x"></i>
+                    <h4>Bảo Mật Toàn Diện</h4>
+                    <p>Quét virus, dọn dẹp hệ thống, quản lý quyền ứng dụng.</p>
+                </div>
+                <div class="homepage-card" onclick="navigateToView('view-finditems', document.querySelector('[data-view=view-finditems]'))">
+                    <i class="fas fa-map-marker-alt fa-3x"></i>
+                    <h4>Tìm Đồ Thông Minh</h4>
+                    <p>Theo dõi vị trí các vật dụng quan trọng với Bluetooth Tag.</p>
+                </div>
+                <div class="homepage-card" onclick="navigateToView('view-community', document.querySelector('[data-view=view-community]'))">
+                    <i class="fas fa-users fa-3x"></i>
+                    <h4>Cộng Đồng Hỗ Trợ</h4>
+                    <p>Đăng tin tìm đồ, giúp đỡ người khác và nhận thưởng.</p>
+                </div>
+                 <div class="homepage-card premium-upsell">
+                    <i class="fas fa-star fa-3x"></i>
+                    <h4>Nâng Cấp Premium</h4>
+                    <p>Trải nghiệm VPN, sao lưu tự động, bảo mật nâng cao và nhiều hơn nữa!</p>
+                    <button class="app-button small-btn" onclick="goToAccountViewAndSection('account-order-info', '.account-sidebar a[data-account-section=\'account-order-info\']', 'premium-packages-detail')">Tìm hiểu thêm</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="view-security" class="app-view">
+            <h2>Bảo Mật & Tối Ưu Hệ Thống</h2>
+            <div class="security-features-grid">
+                <div class="security-feature-item">
+                    <i class="fas fa-microchip fa-2x"></i>
+                    <h4>Quét Phần Mềm Độc Hại</h4>
+                    <p>Phát hiện và loại bỏ virus, mã độc để bảo vệ thiết bị của bạn.</p>
+                    <button class="app-button-outline small-btn" id="start-security-scan-btn-main">Quét Ngay</button>
+                </div>
+                <div class="security-feature-item">
+                    <i class="fas fa-broom fa-2x"></i>
+                    <h4>Dọn Bộ Đệm & Rác</h4>
+                    <p>Giải phóng dung lượng, tăng tốc độ hoạt động của điện thoại.</p>
+                    <button class="app-button-outline small-btn">Dọn Dẹp Ngay</button>
+                </div>
+                <div class="security-feature-item">
+                    <i class="fas fa-user-shield fa-2x"></i>
+                    <h4>Quản Lý Quyền Ứng Dụng</h4>
+                    <p>Kiểm soát các quyền truy cập của ứng dụng để bảo vệ thông tin cá nhân.</p>
+                    <button class="app-button-outline small-btn">Quản Lý Quyền</button>
+                </div>
+            </div>
+            <div id="security-scan-simulation-area" style="margin-top: 20px; padding: 20px; background-color: #f9fafb; border-radius: 6px; display:none;">
+                 <div class="scan-icon-area">
+                     <img src="https://via.placeholder.com/80x80?text=🛡️" alt="Security Icon" id="security-scan-icon-img">
+                </div>
+                <div id="security-scan-progress-container" style="display: none;">
+                    <p id="security-scan-step-text">Đang cập nhật cơ sở dữ liệu virus...</p>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="security-scan-progress-bar"></div>
+                    </div>
+                </div>
+                <div class="scan-results-detailed" id="security-scan-results-detailed" style="display: none;">
+                    <h4>Hoàn Tất Quét!</h4>
+                    <p id="security-scan-summary">Không tìm thấy mối đe dọa nào.</p>
+                    <button class="app-button small-btn" onclick="resetSecurityScan()">Quét Lại</button>
+                </div>
+            </div>
+            <div class="premium-features-showcase">
+                <h3><i class="fas fa-star"></i> Tính Năng Premium</h3>
+                <div class="premium-feature">
+                    <i class="fas fa-vpn fa-2x"></i> 
+                    <div>
+                        <h4>VPN Tốc Độ Cao</h4>
+                        <p>Duyệt web an toàn, ẩn danh và không giới hạn.</p>
+                    </div>
+                </div>
+                <div class="premium-feature">
+                    <i class="fas fa-cloud-upload-alt fa-2x"></i>
+                    <div>
+                        <h4>Sao Lưu Dữ Liệu Tự Động</h4>
+                        <p>Bảo vệ ảnh, video, danh bạ của bạn trên đám mây.</p>
+                    </div>
+                </div>
+                <button class="app-button" style="margin-top:15px;" onclick="goToAccountViewAndSection('account-order-info', '.account-sidebar a[data-account-section=\'account-order-info\']', 'premium-packages-detail')">Nâng Cấp Lên Premium</button>
+            </div>
+        </div>
+
+
+        <div id="view-finditems" class="app-view">
+             <div class="view-header-controls">
+                <h2>Tìm Đồ Vật Của Bạn</h2>
+                <button class="app-button" onclick="openModal('add-tag-modal')">Thêm Thiết Bị Tag Mới (+)</button>
+            </div>
+            <p class="section-subtitle">Mua và gắn Bluetooth Tag của FindIt vào ví, chìa khóa, hoặc bất kỳ vật dụng quan trọng nào để dễ dàng theo dõi vị trí của chúng ngay trên bản đồ.</p>
+            <div class="finditems-layout">
+                <div class="item-list-panel">
+                    <h4>Danh Sách Vật Dụng (<span id="tag-count">3</span>)</h4>
+                    <ul id="main-tag-item-list">
+                        <li onclick="showTagDetailsMain('Chìa khóa nhà', 'Ở gần bạn (Phòng khách)', 90, '🔑')"><span>🔑 Chìa khóa nhà</span> <span class="item-status-nearby">Ở gần</span></li>
+                        <li onclick="showTagDetailsMain('Ví tiền', 'Lần cuối thấy: Ngân hàng ABC, 15 phút trước', 45, '💰')"><span>💰 Ví tiền</span> <span class="item-status-lost">Xa</span></li>
+                        <li onclick="showTagDetailsMain('Ba lô công tác', 'Tại văn phòng, tầng 3', 70, '🎒')"><span>🎒 Ba lô công tác</span> <span class="item-status-nearby">Ở gần</span></li>
+                    </ul>
+                </div>
+                <div class="map-details-panel">
+                    <h4>Vị Trí & Chi Tiết Tag</h4>
+                    <div class="map-placeholder-large">
+                        <img src="https://via.placeholder.com/600x350?text=Bản+đồ+FindIt" alt="Map View Placeholder" id="main-map-image">
+                        <p id="map-selected-tag-name">Chọn một vật dụng để xem vị trí chi tiết.</p>
+                    </div>
+                     <div id="selected-tag-details-main" class="selected-tag-info" style="display:none;">
+                        <h5 id="details-main-tag-name"></h5>
+                        <p>Trạng thái: <span id="details-main-tag-status"></span></p>
+                        <p>Pin: <span id="details-main-tag-battery"></span>%</p>
+                        <div class="tag-actions">
+                            <button class="app-button" id="main-ring-tag-btn"><i class="fas fa-bell"></i> Đổ Chuông</button>
+                            <button class="app-button btn-danger" id="main-report-lost-btn"><i class="fas fa-exclamation-triangle"></i> Báo Mất</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             <div class="community-link-from-finditems">
+                <h4>Thất Lạc Đồ Vật?</h4>
+                <p>Đăng tin lên Cộng Đồng Lost & Found của FindIt để nhận được sự giúp đỡ và có cơ hội tìm lại nhanh hơn. Bạn có thể treo thưởng để tăng động lực cho người tìm thấy.</p>
+                <button class="app-button-outline" onclick="navigateToViewAndOpenModal('view-community', document.querySelector('[data-view=view-community]'), 'add-post-modal', 'lost')">
+                    <i class="fas fa-bullhorn"></i> Đăng Tin Mất Đồ Ngay
+                </button>
+            </div>
+        </div>
+        
+        <div id="view-community" class="app-view">
+            <div class="view-header-controls">
+                <h2>Cộng Đồng Lost & Found</h2>
+                <div>
+                    <button class="app-button" onclick="openModalAndSetType('add-post-modal', 'lost')"><i class="fas fa-bullhorn"></i> Đăng Tin Mất Đồ</button>
+                    <button class="app-button" onclick="openModalAndSetType('add-post-modal', 'found')" style="margin-left: 10px;"><i class="fas fa-hand-holding-heart"></i> Báo Tin Nhặt Được</button>
+                </div>
+            </div>
+            <p class="section-subtitle">Nơi kết nối những người mất đồ và người nhặt được. Đăng tin, tìm kiếm và giúp đỡ lẫn nhau.</p>
+            <div class="community-content">
+                <div class="community-filters-main">
+                    <button class="filter-btn active" data-filter="all">Tất cả</button>
+                    <button class="filter-btn" data-filter="lost">Tin Mất Đồ</button>
+                    <button class="filter-btn" data-filter="found">Tin Nhặt Được</button>
+                    <input type="text" placeholder="Tìm kiếm (ví dụ: chìa khóa, ví, quận Hải Châu...)" class="search-input-community" id="community-search-input">
+                </div>
+                <div class="post-list-main" id="main-post-list">
+                    <div class="post-item-main" data-type="lost" data-keywords="chìa khóa xe máy nhà quận hải châu nguyễn văn linh mèo">
+                        <img src="https://via.placeholder.com/80x80?text=🔑" alt="Chìa khóa">
+                        <div class="post-content-main">
+                            <h4>Mất chùm chìa khóa xe máy và nhà ở Quận Hải Châu</h4>
+                            <p class="post-meta-main">Loại: <span class="lost-tag">Mất đồ</span> | Đăng bởi: UserA | 20 phút trước | Treo thưởng: 200.000 VNĐ</p>
+                            <p class="post-excerpt-main">Mình có làm rơi chùm chìa khóa gồm 1 chìa khóa xe Wave và 2 chìa khóa nhà, có móc hình con mèo gần đường Nguyễn Văn Linh. Ai nhặt được làm ơn chụp ảnh gửi lên app hoặc liên hệ SĐT XXX. Xin cảm ơn và hậu tạ!</p>
+                            <button class="app-button-outline small-btn">Liên Hệ Người Đăng</button>
+                        </div>
+                    </div>
+                    <div class="post-item-main" data-type="found" data-keywords="ví da nâu cổng đại học vku cmnd lê văn b tiền mặt">
+                        <img src="https://via.placeholder.com/80x80?text=Ví" alt="Ví tiền">
+                        <div class="post-content-main">
+                            <h4>Nhặt được ví da màu nâu tại cổng Đại học VKU</h4>
+                            <p class="post-meta-main">Loại: <span class="found-tag">Nhặt được</span> | Đăng bởi: UserB | 1 giờ trước</p>
+                            <p class="post-excerpt-main">Sáng nay khoảng 8h, mình nhặt được 1 ví da màu nâu ở khu vực cổng trường VKU. Bên trong có giấy tờ mang tên Lê Văn B và một ít tiền mặt. Ảnh ví đã được đăng kèm. Chủ nhân vui lòng liên hệ SĐT YYY để nhận lại.</p>
+                             <button class="app-button-outline small-btn">Xem Chi Tiết & Liên Hệ</button>
+                        </div>
+                    </div>
+                </div>
+                <p id="no-community-results" style="text-align:center; padding: 20px; display:none;">Không tìm thấy tin đăng phù hợp.</p>
+            </div>
+        </div>
+
+        <div id="view-account" class="app-view">
+            <div class="account-layout">
+                <aside class="account-sidebar">
+                    <div class="account-sidebar-header">
+                        <img src="login3.png" alt="User Avatar" class="account-avatar-large">
+                        <h4>Người Dùng A</h4>
+                        <p>user.a@example.com</p>
+                    </div>
+                    <ul>
+                        <li><a href="#" class="account-nav-link active" data-account-section="account-personal-info"><i class="fas fa-user-edit"></i> Thông Tin Cá Nhân</a></li>
+                        <li><a href="#" class="account-nav-link" data-account-section="account-order-info"><i class="fas fa-file-invoice-dollar"></i> Đơn Hàng & Premium</a></li>
+                        <li><a href="#" class="account-nav-link" data-account-section="account-app-settings"><i class="fas fa-cogs"></i> Cài Đặt Ứng Dụng</a></li>
+                        <li><a href="#" class="account-nav-link" data-account-section="account-my-tags"><i class="fas fa-tags"></i> Thiết Bị Tag Của Tôi</a></li>
+                        <li><a href="#" class="account-nav-link" data-account-section="account-my-posts"><i class="fas fa-list-alt"></i> Tin Đăng Của Tôi</a></li>
+                        <li><a href="#" style="color: #dc3545;"><i class="fas fa-sign-out-alt"></i> Đăng Xuất</a></li>
+                    </ul>
+                </aside>
+                <section class="account-content-area">
+                    <div id="account-personal-info" class="account-section current-account-section">
+                        <h3><i class="fas fa-user-edit"></i> Thông Tin Cá Nhân</h3>
+                        <form class="account-form">
+                            <div><label>Tên hiển thị:</label> <input type="text" value="Người Dùng A"></div>
+                            <div><label>Email:</label> <input type="email" value="user.a@example.com" readonly></div>
+                            <div><label>Số điện thoại:</label> <input type="tel" value="090xxxxxxx"></div>
+                            <div><label>Địa chỉ:</label> <textarea rows="3">123 Đường ABC, Quận XYZ, Đà Nẵng</textarea></div>
+                            <button type="submit" class="app-button">Lưu Thay Đổi</button>
+                        </form>
+                        <hr>
+                        <h4>Đổi Mật Khẩu</h4>
+                        <form class="account-form">
+                            <div><label>Mật khẩu cũ:</label> <input type="password"></div>
+                            <div><label>Mật khẩu mới:</label> <input type="password"></div>
+                            <div><label>Xác nhận mật khẩu mới:</label> <input type="password"></div>
+                            <button type="submit" class="app-button">Cập Nhật Mật Khẩu</button>
+                        </form>
+                    </div>
+
+                    <div id="account-order-info" class="account-section">
+                        <h3><i class="fas fa-file-invoice-dollar"></i> Đơn Hàng & Gói Premium</h3>
+                        
+                        <div class="current-subscription-info">
+                            <h4>Gói Hiện Tại Của Bạn</h4>
+                            <div class="order-item-account">
+                                <p><strong>Gói FindIt Premium - 1 Năm</strong></p>
+                                <p><strong>Ngày mua:</strong> 01/01/2025</p>
+                                <p><strong>Ngày hết hạn:</strong> 31/12/2025</p>
+                                <p><strong>Trạng thái:</strong> <span style="color: green; font-weight:bold;">Đang hoạt động</span></p>
+                                <p><strong>Giá:</strong> 299.000 VNĐ</p>
+                                <p><a href="#">Xem hóa đơn chi tiết</a></p>
+                            </div>
+                            </div>
+
+                        <hr class="section-divider">
+
+                        <div class="premium-packages-showcase" id="premium-packages-detail">
+                            <h4>Nâng Cấp Hoặc Gia Hạn Gói Premium</h4>
+                            <p>Mở khóa toàn bộ tiềm năng của FindIt với các tính năng bảo mật và tiện ích vượt trội!</p>
+                            
+                            <div class="packages-grid">
+                                <div class="package-card">
+                                    <div class="package-header">
+                                        <h5>FindIt Premium</h5>
+                                        <span class="package-duration">1 Tháng</span>
+                                    </div>
+                                    <div class="package-price">
+                                        <span class="price-amount">29.000</span> VNĐ
+                                        <span class="price-cycle">/ tháng</span>
+                                    </div>
+                                    <ul class="package-features">
+                                        <li><i class="fas fa-check-circle"></i> VPN tốc độ cao</li>
+                                        <li><i class="fas fa-check-circle"></i> Sao lưu dữ liệu tự động</li>
+                                        <li><i class="fas fa-check-circle"></i> Khóa ứng dụng bằng vân tay</li>
+                                        <li><i class="fas fa-check-circle"></i> Cảnh báo rò rỉ mật khẩu</li>
+                                        <li><i class="fas fa-check-circle"></i> Không quảng cáo</li>
+                                        <li><i class="fas fa-check-circle"></i> Hỗ trợ ưu tiên</li>
+                                    </ul>
+                                    <button class="app-button choose-package-btn">Chọn Gói Tháng</button>
+                                </div>
+
+                                <div class="package-card recommended">
+                                    <span class="recommended-badge">Tiết Kiệm 40%</span>
+                                    <div class="package-header">
+                                        <h5>FindIt Premium</h5>
+                                        <span class="package-duration">1 Năm</span>
+                                    </div>
+                                    <div class="package-price">
+                                        <span class="price-amount">299.000</span> VNĐ
+                                        <span class="price-cycle">/ năm</span>
+                                        <span class="price-original"><s>499.000 VNĐ</s></span>
+                                    </div>
+                                    <ul class="package-features">
+                                        <li><i class="fas fa-check-circle"></i> <strong>Tất cả tính năng Premium</strong></li>
+                                        <li><i class="fas fa-shield-alt"></i> Diệt virus & Tối ưu hệ thống</li>
+                                        <li><i class="fas fa-map-marked-alt"></i> Tìm đồ không giới hạn</li>
+                                        <li><i class="fas fa-lock"></i> Bảo mật nâng cao</li>
+                                        <li><i class="fas fa-headset"></i> Hỗ trợ 24/7</li>
+                                    </ul>
+                                    <button class="app-button choose-package-btn">Chọn Gói Năm</button>
+                                </div>
+
+                                <div class="package-card">
+                                    <div class="package-header">
+                                        <h5>FindIt Premium</h5>
+                                        <span class="package-duration">6 Tháng</span>
+                                    </div>
+                                    <div class="package-price">
+                                        <span class="price-amount">159.000</span> VNĐ
+                                        <span class="price-cycle">/ 6 tháng</span>
+                                    </div>
+                                    <ul class="package-features">
+                                        <li><i class="fas fa-check-circle"></i> VPN tốc độ cao</li>
+                                        <li><i class="fas fa-check-circle"></i> Sao lưu dữ liệu tự động</li>
+                                        <li><i class="fas fa-check-circle"></i> Khóa ứng dụng bằng vân tay</li>
+                                        <li><i class="fas fa-check-circle"></i> Cảnh báo rò rỉ mật khẩu</li>
+                                        <li><i class="fas fa-check-circle"></i> Không quảng cáo</li>
+                                    </ul>
+                                    <button class="app-button choose-package-btn">Chọn Gói 6 Tháng</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="account-app-settings" class="account-section">
+                        <h3><i class="fas fa-cogs"></i> Cài Đặt Ứng Dụng</h3>
+                        <div class="settings-category-account">
+                            <h4>Bảo Mật Nâng Cao (Premium)</h4>
+                            <ul>
+                                <li><label class="toggle-switch"><span>Khóa ứng dụng bằng vân tay</span> <input type="checkbox" id="fingerprint-lock" checked> <span class="slider"></span></label></li>
+                                <li><label class="toggle-switch"><span>Cảnh báo rò rỉ mật khẩu</span> <input type="checkbox" id="leak-warning" checked> <span class="slider"></span></label></li>
+                            </ul>
+                        </div>
+                        <div class="settings-category-account">
+                            <h4>VPN (Premium)</h4>
+                             <ul>
+                                <li><label class="toggle-switch"><span>Kích hoạt VPN tốc độ cao</span> <input type="checkbox" id="vpn-toggle"> <span class="slider"></span></label></li>
+                                <li><label for="vpn-location">Chọn vị trí máy chủ:</label> <select id="vpn-location"><option>Tự động</option><option>Singapore</option><option>Hoa Kỳ</option></select></li>
+                            </ul>
+                        </div>
+                        <div class="settings-category-account">
+                            <h4>Sao Lưu Dữ Liệu Tự Động (Premium)</h4>
+                            <ul>
+                                <li><label class="toggle-switch"><span>Bật sao lưu tự động</span> <input type="checkbox" id="auto-backup" checked> <span class="slider"></span></label></li>
+                                <li><p>Sao lưu vào: Google Drive (user.a@example.com)</p></li>
+                                <li><button class="app-button-outline small-btn">Thay đổi tài khoản sao lưu</button></li>
+                            </ul>
+                        </div>
+                        <div class="settings-category-account">
+                            <h4>Thông Báo Chung</h4>
+                             <ul>
+                                <li><label class="toggle-switch"><span>Thông báo cập nhật ứng dụng</span> <input type="checkbox" checked> <span class="slider"></span></label></li>
+                                <li><label class="toggle-switch"><span>Thông báo từ cộng đồng FindIt</span> <input type="checkbox" checked> <span class="slider"></span></label></li>
+                                <li><label class="toggle-switch"><span>Cảnh báo bỏ quên đồ vật (khi dùng Tag)</span> <input type="checkbox"> <span class="slider"></span></label></li>
+                            </ul>
+                        </div>
+                        <div class="settings-category-account">
+                            <h4>Ngôn Ngữ & Giao Diện</h4>
+                            <ul>
+                                <li><label for="app-language">Ngôn ngữ hiển thị:</label> <select id="app-language"><option>Tiếng Việt</option><option>English</option></select></li>
+                                <li><label class="toggle-switch"><span>Chế độ tối (Dark Mode)</span> <input type="checkbox" id="dark-mode"> <span class="slider"></span></label></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div id="account-my-tags" class="account-section">
+                        <h3><i class="fas fa-tags"></i> Thiết Bị Tag Của Tôi</h3>
+                        <p>Quản lý các thiết bị Bluetooth Tag bạn đã kết nối với FindIt.</p>
+                        <ul id="account-tag-list">
+                            </ul>
+                         <button class="app-button" onclick="navigateToView('view-finditems', document.querySelector('[data-view=view-finditems]')); openModal('add-tag-modal');"><i class="fas fa-plus-circle"></i> Thêm Tag Mới</button>
+                    </div>
+                     <div id="account-my-posts" class="account-section">
+                        <h3><i class="fas fa-list-alt"></i> Tin Đăng Cộng Đồng Của Tôi</h3>
+                        <p>Xem lại và quản lý các tin bạn đã đăng trên cộng đồng Lost & Found.</p>
+                        <div id="account-user-post-list">
+                            <p><em>Bạn chưa đăng tin nào.</em></p>
+                        </div>
+                        <button class="app-button" onclick="navigateToView('view-community', document.querySelector('[data-view=view-community]')); openModalAndSetType('add-post-modal', 'lost');"><i class="fas fa-plus-circle"></i> Đăng Tin Mới</button>
+                    </div>
+                </section>
+            </div>
+        </div>
+
+    </main>
+
+    <div class="app-modal-overlay" id="add-tag-modal">
+        <div class="modal-content-main">
+            <span class="close-button-main" onclick="closeModal('add-tag-modal')">&times;</span>
+            <h4>Thêm Thiết Bị Tag Mới</h4>
+            <label for="tag-name-main">Tên thiết bị:</label>
+            <input type="text" id="tag-name-main" placeholder="Ví dụ: Chìa khóa xe">
+            <label for="tag-icon-main">Chọn biểu tượng (emoji):</label>
+            <input type="text" id="tag-icon-main" placeholder="Ví dụ: 🔑">
+            <button class="app-button" onclick="submitNewTagMain()">Lưu Thiết Bị</button>
+        </div>
+    </div>
+    
+    <div class="app-modal-overlay" id="add-post-modal">
+        <div class="modal-content-main">
+            <span class="close-button-main" onclick="closeModal('add-post-modal')">&times;</span>
+            <h4 id="add-post-modal-title">Đăng Tin Mới Lên Cộng Đồng</h4>
+            <label for="post-title-main">Tiêu đề:</label>
+            <input type="text" id="post-title-main" placeholder="Ví dụ: Mất chìa khóa xe tại...">
+            
+            <input type="hidden" id="post-type-hidden" value="lost"> <div id="reward-field-container" style="display:none;"> <label for="post-reward-main">Treo thưởng (VNĐ, nếu có):</label>
+                 <input type="number" id="post-reward-main" placeholder="Ví dụ: 200000">
+            </div>
+
+            <label for="post-description-main">Mô tả chi tiết:</label>
+            <textarea id="post-description-main" rows="3" placeholder="Mô tả đồ vật, thời gian, địa điểm..."></textarea>
+            <label for="post-location-main">Khu vực:</label>
+            <input type="text" id="post-location-main" placeholder="Ví dụ: Quận Hải Châu, Đà Nẵng">
+            <label for="post-image-main">Ảnh đính kèm (mô phỏng):</label>
+            <input type="file" id="post-image-main" accept="image/*">
+            <button class="app-button" onclick="submitNewPostMain()">Đăng Tin</button>
+        </div>
+    </div>
+
+    <footer class="app-footer-main">
+        <div class="container">
+            <p>&copy; 2025 FindIt. Bảo vệ và kết nối cộng đồng.</p>
+        </div>
+    </footer>
+
+    <script>
+    const navLinks = document.querySelectorAll('.app-nav .nav-link');
+    const appViews = document.querySelectorAll('.app-view');
+    const userAvatarIcon = document.getElementById('user-avatar-icon');
+    
+    // Account page elements
+    const accountSidebarLinks = document.querySelectorAll('.account-sidebar .account-nav-link');
+    const accountSections = document.querySelectorAll('.account-content-area .account-section');
+
+    let currentTagCount = 3; 
+    const dashboardTrackedItemsSpan = document.getElementById('dashboard-tracked-items');
+    const tagCountSpan = document.getElementById('tag-count');
+    
+    let myTags = [ // Dữ liệu tag mẫu cho tài khoản
+        { name: 'Chìa khóa nhà', status: 'Ở gần bạn (Phòng khách)', battery: 90, icon: '🔑' },
+        { name: 'Ví tiền', status: 'Lần cuối thấy: Ngân hàng ABC, 15 phút trước', battery: 45, icon: '💰' },
+        { name: 'Ba lô công tác', status: 'Tại văn phòng, tầng 3', battery: 70, icon: '🎒' }
+    ];
+    let myPosts = []; // Dữ liệu tin đăng của người dùng (mô phỏng)
+
+    // Hàm này CHỈ để chuyển đổi các section NỘI BỘ trang tài khoản
+    function navigateToAccountSectionInternal(sectionId, clickedLinkElement) {
+        accountSections.forEach(section => section.classList.remove('current-account-section'));
+        const targetSection = document.getElementById(sectionId);
+        if (targetSection) {
+            targetSection.classList.add('current-account-section');
+        }
+
+        accountSidebarLinks.forEach(link => link.classList.remove('active'));
+        if (clickedLinkElement) {
+            clickedLinkElement.classList.add('active');
+        }
+    }
+
+    // Hàm này để chuyển view chính của ứng dụng
+    function navigateToView(viewId, clickedLinkElementOrNull) {
+        appViews.forEach(view => view.classList.remove('current-view'));
+        const targetView = document.getElementById(viewId);
+        if (targetView) {
+            targetView.classList.add('current-view');
+        }
+
+        navLinks.forEach(link => link.classList.remove('active'));
+        if (clickedLinkElementOrNull && clickedLinkElementOrNull.classList.contains('nav-link')) {
+            clickedLinkElementOrNull.classList.add('active');
+        }
+
+        // Nếu chuyển đến view-account, active section mặc định của nó
+        if (viewId === 'view-account') {
+            const defaultAccountSectionLink = document.querySelector('.account-sidebar .account-nav-link[data-account-section="account-personal-info"]');
+            navigateToAccountSectionInternal('account-personal-info', defaultAccountSectionLink);
+        }
+    }
+    
+    // Hàm này dùng khi cần CHUYỂN ĐẾN trang account VÀ một section cụ thể trong đó
+    function goToAccountViewAndSection(targetAccountSectionId, targetAccountSidebarLinkSelectorQuery, elementToScrollToId = null) {
+    // 1. Chuyển đến view 'view-account'
+    // Không cần active link nav chính cụ thể khi gọi từ đây, 
+    // vì navigateToView sẽ xử lý việc bỏ active các link nav chính khác.
+    navigateToView('view-account', null); 
+
+    // 2. Active đúng section trong sidebar của trang account
+    const clickedAccountLinkElement = document.querySelector(targetAccountSidebarLinkSelectorQuery);
+    navigateToAccountSectionInternal(targetAccountSectionId, clickedAccountLinkElement);
+
+    // 3. (Mới) Cuộn tới element cụ thể nếu được cung cấp ID
+    if (elementToScrollToId) {
+        setTimeout(() => { // Timeout nhỏ để đảm bảo view và section đã render xong trước khi cuộn
+            const targetElement = document.getElementById(elementToScrollToId);
+            if (targetElement) {
+                targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' }); // 'start' để cuộn phần tử lên đầu view, 'center' để vào giữa.
+            }
+        }, 150); // Thời gian chờ có thể cần điều chỉnh tùy theo độ phức tạp của trang
+    }
+}
+
+
+    if (userAvatarIcon) {
+        userAvatarIcon.addEventListener('click', (event) => {
+            event.preventDefault();
+            // Khi click avatar, chuyển đến view-account và section thông tin cá nhân làm mặc định
+            goToAccountViewAndSection('account-personal-info', '.account-sidebar a[data-account-section="account-personal-info"]');
+        });
+    }
+    
+    navLinks.forEach(link => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault();
+            const viewId = link.getAttribute('data-view');
+            navigateToView(viewId, link);
+        });
+    });
+
+    accountSidebarLinks.forEach(link => {
+        link.addEventListener('click', (event) => {
+            event.preventDefault();
+            const sectionId = link.getAttribute('data-account-section');
+            if (sectionId) { 
+                // Khi đã ở trong trang account, chỉ cần chuyển section nội bộ
+                navigateToAccountSectionInternal(sectionId, link);
+            } else {
+                // Xử lý đăng xuất (mô phỏng)
+                alert("Đăng xuất thành công! (mô phỏng)");
+                navigateToView('view-homepage', document.querySelector('.app-nav .nav-link[data-view="view-homepage"]'));
+            }
+        });
+    });
+    
+    function openModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) modal.style.display = 'flex';
+    }
+
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) modal.style.display = 'none';
+    }
+    
+    function openModalAndSetType(modalId, type) {
+        openModal(modalId);
+        const typeInput = document.getElementById('post-type-hidden');
+        const rewardField = document.getElementById('reward-field-container');
+        const modalTitle = document.getElementById('add-post-modal-title');
+
+        if (typeInput) typeInput.value = type;
+        if (type === 'lost') {
+            if(rewardField) rewardField.style.display = 'block';
+            if(modalTitle) modalTitle.textContent = 'Đăng Tin Mất Đồ';
+        } else { // found
+            if(rewardField) rewardField.style.display = 'none';
+            if(modalTitle) modalTitle.textContent = 'Báo Tin Nhặt Được';
+        }
+    }
+    
+    function navigateToViewAndOpenModal(viewId, clickedViewLink, modalId, postType = 'lost') {
+        navigateToView(viewId, clickedViewLink);
+        setTimeout(() => {
+            openModalAndSetType(modalId, postType);
+        }, 100); 
+    }
+
+    // --- Logic cho các view khác (Bảo Mật, Tìm Đồ, Cộng Đồng) ---
+    // (Giữ nguyên các hàm: resetSecurityScan, submitNewTagMain, showTagDetailsMain, renderMyTags, 
+    //  submitNewPostMain, renderCommunityPosts, filterAndSearchCommunityPosts, renderMyPosts)
+
+    // --- Logic cho View Bảo Mật ---
+    const securityScanBtn = document.getElementById('start-security-scan-btn-main');
+    const securityScanProgressContainer = document.getElementById('security-scan-progress-container');
+    const securityScanStepText = document.getElementById('security-scan-step-text');
+    const securityScanProgressBar = document.getElementById('security-scan-progress-bar');
+    const securityScanResultsDiv = document.getElementById('security-scan-results-detailed');
+    const securityScanIconImg = document.getElementById('security-scan-icon-img');
+    const securityScanSimulationArea = document.getElementById('security-scan-simulation-area');
+
+    const securityScanSteps = [
+        { text: "Đang cập nhật cơ sở dữ liệu virus...", duration: 1000, progress: 20 },
+        { text: "Quét nhanh các khu vực quan trọng...", duration: 1500, progress: 50 },
+        { text: "Quét sâu các ứng dụng đã cài đặt...", duration: 2000, progress: 80 },
+        { text: "Hoàn tất và kiểm tra bộ đệm...", duration: 1000, progress: 100 }
+    ];
+
+    function resetSecurityScan() {
+        if(securityScanBtn) securityScanBtn.style.display = 'block';
+        if(securityScanBtn) securityScanBtn.disabled = false;
+        if(securityScanIconImg) securityScanIconImg.style.display = 'block';
+        if(securityScanProgressContainer) securityScanProgressContainer.style.display = 'none';
+        if(securityScanResultsDiv) securityScanResultsDiv.style.display = 'none';
+        if(securityScanProgressBar) securityScanProgressBar.style.width = '0%';
+        if(securityScanSimulationArea) securityScanSimulationArea.style.display = 'none';
+    }
+    
+    if(securityScanBtn){
+        securityScanBtn.addEventListener('click', () => {
+            if(securityScanSimulationArea) securityScanSimulationArea.style.display = 'block';
+            securityScanBtn.disabled = true; 
+            if(securityScanIconImg) securityScanIconImg.style.display = 'none';
+            if(securityScanProgressContainer) securityScanProgressContainer.style.display = 'block';
+            if(securityScanResultsDiv) securityScanResultsDiv.style.display = 'none';
+            let currentSecurityStep = 0;
+            let cumulativeSecurityProgress = 0;
+
+            function processSecurityStep() {
+                if (currentSecurityStep < securityScanSteps.length) {
+                    const step = securityScanSteps[currentSecurityStep];
+                    if(securityScanStepText) securityScanStepText.innerHTML = step.text;
+                    
+                    let startProgress = cumulativeSecurityProgress;
+                    if (currentSecurityStep > 0) startProgress = securityScanSteps[currentSecurityStep-1].progress;
+                    
+                    let targetProgress = step.progress;
+                    let animationDuration = step.duration;
+                    let startTime = null;
+
+                    function animateSecurityProgress(timestamp) {
+                        if (!startTime) startTime = timestamp;
+                        const elapsedTime = timestamp - startTime;
+                        const progressFraction = Math.min(elapsedTime / animationDuration, 1);
+                        const currentDisplayProgress = startProgress + (targetProgress - startProgress) * progressFraction;
+                        if(securityScanProgressBar) securityScanProgressBar.style.width = currentDisplayProgress + '%';
+
+                        if (progressFraction < 1) {
+                            requestAnimationFrame(animateSecurityProgress);
+                        } else {
+                            cumulativeSecurityProgress = targetProgress;
+                            currentSecurityStep++;
+                            setTimeout(processSecurityStep, 200);
+                        }
+                    }
+                    requestAnimationFrame(animateSecurityProgress);
+
+                } else {
+                    if(securityScanProgressContainer) securityScanProgressContainer.style.display = 'none';
+                    if(securityScanResultsDiv) securityScanResultsDiv.style.display = 'block';
+                    const summaryEl = document.getElementById('security-scan-summary');
+                    if (summaryEl) summaryEl.textContent = `Đã quét ${Math.floor(Math.random() * 10000) + 10000} tệp và ${Math.floor(Math.random() * 50) + 50} ứng dụng. Không tìm thấy mối đe dọa nào.`;
+                     securityScanBtn.disabled = false; 
+                }
+            }
+            processSecurityStep();
+        });
+    }
+
+    // --- Logic cho View Tìm Đồ ---
+    const mainTagItemList = document.getElementById('main-tag-item-list');
+    const accountTagList = document.getElementById('account-tag-list');
+    const mainMapImage = document.getElementById('main-map-image');
+    const mapSelectedTagName = document.getElementById('map-selected-tag-name');
+    const selectedTagDetailsMainDiv = document.getElementById('selected-tag-details-main');
+
+    function renderMyTags() {
+        if (mainTagItemList) mainTagItemList.innerHTML = '';
+        if (accountTagList) accountTagList.innerHTML = '';
+
+        myTags.forEach(tag => {
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `<span>${tag.icon} ${tag.name}</span> <span class="${tag.status.includes('Ở gần') ? 'item-status-nearby' : 'item-status-lost'}">${tag.status.split('(')[0].trim()}</span>`;
+            listItem.onclick = () => showTagDetailsMain(tag.name, tag.status, tag.battery, tag.icon);
+            if (mainTagItemList) mainTagItemList.appendChild(listItem.cloneNode(true));
+
+            const accountListItem = document.createElement('li');
+            accountListItem.innerHTML = `<span>${tag.icon} ${tag.name}</span> <span>Pin: ${tag.battery}%</span> <button class="app-button-outline small-btn" onclick="goToAccountViewAndSection('view-finditems', null); setTimeout(()=>showTagDetailsMain('${tag.name}', '${tag.status}', ${tag.battery}, '${tag.icon}'),50);">Xem trên bản đồ</button>`;
+            if (accountTagList) accountTagList.appendChild(accountListItem);
+        });
+        if(tagCountSpan) tagCountSpan.textContent = myTags.length;
+        if(dashboardTrackedItemsSpan) dashboardTrackedItemsSpan.textContent = `${myTags.length} vật dụng`;
+    }
+
+    function submitNewTagMain() {
+        const tagNameInput = document.getElementById('tag-name-main');
+        const tagIconInput = document.getElementById('tag-icon-main');
+        const tagName = tagNameInput.value;
+        const tagIcon = tagIconInput.value || '🏷️';
+
+        if (tagName) {
+            myTags.push({name: tagName, status: 'Vừa thêm, ở gần', battery: 100, icon: tagIcon});
+            renderMyTags();
+            
+            tagNameInput.value = '';
+            tagIconInput.value = '';
+            closeModal('add-tag-modal');
+        } else {
+            alert("Vui lòng nhập tên thiết bị!");
+        }
+    }
+    
+    function showTagDetailsMain(name, status, battery, icon) {
+        if (!selectedTagDetailsMainDiv || !mainMapImage || !mapSelectedTagName) return;
+
+        selectedTagDetailsMainDiv.style.display = 'block';
+        const detailsNameEl = document.getElementById('details-main-tag-name');
+        const detailsStatusEl = document.getElementById('details-main-tag-status');
+        const detailsBatteryEl = document.getElementById('details-main-tag-battery');
+
+        if(detailsNameEl) detailsNameEl.textContent = `${icon} ${name}`;
+        if(detailsStatusEl) detailsStatusEl.textContent = status;
+        if(detailsBatteryEl) detailsBatteryEl.textContent = battery;
+        
+        mainMapImage.src = `https://via.placeholder.com/600x350?text=Vị+trí+${name.replace(/\s/g, "+")}`;
+        mapSelectedTagName.textContent = `Hiển thị vị trí cho: ${icon} ${name}`;
+
+        const ringBtn = document.getElementById('main-ring-tag-btn');
+        if(ringBtn) {
+            ringBtn.textContent = "Đổ Chuông";
+            ringBtn.onclick = function() {
+                if (this.textContent === "Đổ Chuông") {
+                    this.textContent = "Đang đổ chuông...";
+                    setTimeout(() => {
+                        this.textContent = "Dừng Đổ Chuông";
+                    }, 3000);
+                } else {
+                    this.textContent = "Đổ Chuông";
+                }
+            };
+        }
+        selectedTagDetailsMainDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // --- Logic cho View Cộng Đồng ---
+    const mainPostListDiv = document.getElementById('main-post-list');
+    const accountUserPostListDiv = document.getElementById('account-user-post-list');
+    const communitySearchInput = document.getElementById('community-search-input');
+    const communityFilterBtns = document.querySelectorAll('#view-community .filter-btn');
+    const noCommunityResultsP = document.getElementById('no-community-results');
+
+    let allCommunityPosts = [ 
+        { id: 1, title: 'Mất chùm chìa khóa xe máy và nhà ở Quận Hải Châu', type: 'lost', reward: '200.000 VNĐ', description: 'Mình có làm rơi chùm chìa khóa gồm 1 chìa khóa xe Wave và 2 chìa khóa nhà, có móc hình con mèo gần đường Nguyễn Văn Linh. Ai nhặt được làm ơn chụp ảnh gửi lên app hoặc liên hệ SĐT XXX. Xin cảm ơn và hậu tạ!', location: 'Quận Hải Châu, Đà Nẵng', user: 'UserA', time: '20 phút trước', image: 'https://via.placeholder.com/80x80?text=🔑', keywords: 'chìa khóa xe máy nhà quận hải châu nguyễn văn linh mèo' },
+        { id: 2, title: 'Nhặt được ví da màu nâu tại cổng Đại học VKU', type: 'found', reward: null, description: 'Sáng nay khoảng 8h, mình nhặt được 1 ví da màu nâu ở khu vực cổng trường VKU. Bên trong có giấy tờ mang tên Lê Văn B và một ít tiền mặt. Ảnh ví đã được đăng kèm. Chủ nhân vui lòng liên hệ SĐT YYY để nhận lại.', location: 'Đại học VKU', user: 'UserB', time: '1 giờ trước', image: 'https://via.placeholder.com/80x80?text=Ví', keywords: 'ví da nâu cổng đại học vku cmnd lê văn b tiền mặt' },
+        { id: 3, title: 'Tìm điện thoại iPhone 13 Pro Max rơi ở Vincom', type: 'lost', reward: 'Thỏa thuận', description: 'Mình để quên điện thoại iPhone 13 Pro Max màu xanh trên ghế ở khu ẩm thực Vincom chiều qua. Mong tìm lại được, xin cảm ơn và hậu tạ.', location: 'Vincom Đà Nẵng', user: 'UserC', time: 'Hôm qua', image: 'https://via.placeholder.com/80x80?text=📱', keywords: 'điện thoại iphone 13 pro max vincom xanh'},
+        { id: 4, title: 'Nhặt được tai nghe Airpods Pro gần cầu Rồng', type: 'found', reward: null, description: 'Mình nhặt được một hộp tai nghe Airpods Pro màu trắng, còn mới, gần khu vực cầu Rồng tối qua. Ai là chủ nhân liên hệ mình nhé.', location: 'Cầu Rồng, Đà Nẵng', user: 'UserD', time: 'Tối qua', image: 'https://via.placeholder.com/80x80?text=🎧', keywords: 'tai nghe airpods pro cầu rồng trắng'}
+    ];
+    
+    function renderCommunityPosts(postsToRender = allCommunityPosts) {
+        if (!mainPostListDiv) return;
+        mainPostListDiv.innerHTML = '';
+        if (postsToRender.length === 0) {
+            if(noCommunityResultsP) noCommunityResultsP.style.display = 'block';
+            return;
+        }
+        if(noCommunityResultsP) noCommunityResultsP.style.display = 'none';
+
+        postsToRender.forEach(post => {
+            const postElement = document.createElement('div');
+            postElement.classList.add('post-item-main');
+            postElement.dataset.type = post.type;
+            postElement.dataset.keywords = post.keywords;
+
+            let typeTag = post.type === 'lost' ? `<span class="lost-tag">Mất đồ</span>` : `<span class="found-tag">Nhặt được</span>`;
+            let rewardText = post.type === 'lost' && post.reward ? `| Treo thưởng: ${post.reward}` : '';
+
+            postElement.innerHTML = `
+                <img src="${post.image}" alt="Post image">
+                <div class="post-content-main">
+                    <h4>${post.title}</h4>
+                    <p class="post-meta-main">Loại: ${typeTag} | Đăng bởi: ${post.user} | ${post.time} ${rewardText} | Khu vực: ${post.location}</p>
+                    <p class="post-excerpt-main">${post.description}</p>
+                    <button class="app-button-outline small-btn">Liên Hệ Người Đăng</button>
+                </div>
+            `;
+            mainPostListDiv.appendChild(postElement);
+        });
+    }
+
+    function filterAndSearchCommunityPosts() {
+        const searchTerm = communitySearchInput.value.toLowerCase().trim();
+        const activeFilterBtn = document.querySelector('#view-community .filter-btn.active');
+        const filterType = activeFilterBtn ? activeFilterBtn.dataset.filter : 'all';
+
+        let filteredPosts = allCommunityPosts.filter(post => {
+            const typeMatch = filterType === 'all' || post.type === filterType;
+            const searchMatch = searchTerm === '' || 
+                                post.title.toLowerCase().includes(searchTerm) || 
+                                post.description.toLowerCase().includes(searchTerm) ||
+                                post.location.toLowerCase().includes(searchTerm) ||
+                                (post.keywords && post.keywords.toLowerCase().includes(searchTerm));
+            return typeMatch && searchMatch;
+        });
+        renderCommunityPosts(filteredPosts);
+    }
+
+    if(communitySearchInput) {
+        communitySearchInput.addEventListener('input', filterAndSearchCommunityPosts);
+    }
+    if(communityFilterBtns) {
+        communityFilterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                communityFilterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                filterAndSearchCommunityPosts();
+            });
+        });
+    }
+
+    function renderMyPosts() {
+        if (!accountUserPostListDiv) return;
+        accountUserPostListDiv.innerHTML = '';
+        if (myPosts.length === 0) {
+            accountUserPostListDiv.innerHTML = '<p><em>Bạn chưa đăng tin nào.</em></p>';
+            return;
+        }
+        myPosts.forEach(post => {
+            const postElement = document.createElement('div');
+            postElement.classList.add('post-item-main');
+            let typeTag = post.type === 'lost' ? `<span class="lost-tag">Mất đồ</span>` : `<span class="found-tag">Nhặt được</span>`;
+            let rewardText = post.type === 'lost' && post.reward ? `| Treo thưởng: ${post.reward}` : '';
+            postElement.innerHTML = `
+                <img src="${post.image}" alt="Post image">
+                <div class="post-content-main">
+                    <h4>${post.title}</h4>
+                    <p class="post-meta-main">Loại: ${typeTag} | ${post.time} ${rewardText} | Khu vực: ${post.location}</p>
+                    <p class="post-excerpt-main">${post.description}</p>
+                    <button class="app-button-outline small-btn">Chỉnh sửa</button> <button class="app-button-outline small-btn btn-danger">Xóa</button>
+                </div>
+            `;
+            accountUserPostListDiv.appendChild(postElement);
+        });
+    }
+
+    function submitNewPostMain() {
+        const titleInput = document.getElementById('post-title-main');
+        const hiddenTypeInput = document.getElementById('post-type-hidden');
+        const descriptionTextarea = document.getElementById('post-description-main');
+        const locationInput = document.getElementById('post-location-main');
+        const imageInput = document.getElementById('post-image-main');
+        const rewardInput = document.getElementById('post-reward-main');
+
+        const title = titleInput.value;
+        const type = hiddenTypeInput.value;
+        const description = descriptionTextarea.value;
+        const location = locationInput.value;
+        const imageFile = imageInput.files[0];
+        const reward = type === 'lost' ? rewardInput.value : null; // Chỉ lấy reward nếu là tin mất đồ
+
+        let imageUrl = imageFile ? `https://via.placeholder.com/80x80?text=Ảnh` : (type === 'lost' ? 'https://via.placeholder.com/80x80?text=❓' : 'https://via.placeholder.com/80x80?text=✔️');
+
+        if (title && description && location) {
+            const newPostData = {
+                id: Date.now(), 
+                title: title,
+                type: type,
+                reward: reward,
+                description: description,
+                location: location,
+                user: 'Người Dùng Hiện Tại', 
+                time: 'Vừa xong',
+                image: imageUrl,
+                keywords: `${title} ${description} ${location}`.toLowerCase()
+            };
+            allCommunityPosts.unshift(newPostData); 
+            myPosts.unshift(newPostData); 
+
+            renderCommunityPosts(); 
+            renderMyPosts(); 
+
+            titleInput.value = '';
+            descriptionTextarea.value = '';
+            locationInput.value = '';
+            imageInput.value = '';
+            if(rewardInput) rewardInput.value = '';
+            closeModal('add-post-modal');
+        } else {
+            alert("Vui lòng điền đầy đủ các trường bắt buộc (Tiêu đề, Mô tả, Khu vực)!");
+        }
+    }
+
+    // Khởi tạo
+    document.addEventListener('DOMContentLoaded', () => {
+        const initialViewLink = document.querySelector('.app-nav .nav-link[data-view="view-homepage"]');
+        if (initialViewLink) {
+            navigateToView('view-homepage', initialViewLink);
+        }
+        
+        renderMyTags(); 
+        renderCommunityPosts(); 
+        renderMyPosts(); 
+
+        // Đặt section mặc định cho trang tài khoản khi tải trang
+        // Không gọi navigateToAccountSection ở đây để tránh việc tự động chuyển view
+        const initialAccountSectionLink = document.querySelector('.account-sidebar a[data-account-section="account-personal-info"]');
+        const initialAccountSection = document.getElementById('account-personal-info');
+        if (initialAccountSectionLink && initialAccountSection) { 
+            initialAccountSectionLink.classList.add('active');
+            initialAccountSection.classList.add('current-account-section');
+        }
+    });
+</script>
+</body>
+</html>
